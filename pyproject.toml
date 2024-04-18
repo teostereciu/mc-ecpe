@@ -23,6 +23,7 @@ tensorflow-hub = "^0.16.1"
 bert-tensorflow = "^1.0.4"
 absl-py = "^2.1.0"
 pydot = "^2.0.0"
+seaborn = "^0.13.2"
 
 
 [build-system]
