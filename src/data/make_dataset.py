@@ -114,7 +114,7 @@ if __name__ == '__main__':
     raw_data_dir = project_dir / 'data' / 'raw'
     interim_data_dir = project_dir / 'data' / 'interim'
     processed_data_dir = project_dir / 'data' / 'processed'
-    json_data_path = raw_data_dir / 'Subtask_2_train_small.json'
+    json_data_path = raw_data_dir / 'Subtask_2_train.json'
     
 
     # find .env automagically by walking up directories until it's found, then
