@@ -1,7 +1,7 @@
-from src.models import audioonlymodel
 from src.models.abstractmodel import AbstractModel
 from src.models.textaudiofusionmodel import TextAudioFusionModel
 from src.models.textonlymodel import TextOnlyModel
+from src.models.audioonlymodel import AudioOnlyModel
 
 
 class ModelFactory:
@@ -24,7 +24,7 @@ class ModelFactory:
         if model_type == "TEXT-ONLY":
             return TextOnlyModel(hyperpars)
         elif model_type == "AUDIO-ONLY":
-            return audioonlymodel(hyperpars)
+            return AudioOnlyModel(hyperpars)
         elif model_type == "TEXT-AND-AUDIO":
             return TextAudioFusionModel(hyperpars)
 

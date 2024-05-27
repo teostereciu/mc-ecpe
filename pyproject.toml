@@ -7,25 +7,19 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "3.10.9"
-tensorflow-macos = "2.9.2"
-tensorflow-metal = "0.5.0"
-jupyter = "^1.0.0"
-matplotlib = "^3.8.3"
-contractions = "^0.1.73"
-nltk = "^3.8.1"
-ipykernel = "^6.29.3"
-notebook = "^7.1.1"
-librosa = "^0.10.1"
-scikit-image = "^0.22.0"
-moviepy = "^1.0.3"
-tensorflow-hub = "^0.16.1"
-bert-tensorflow = "^1.0.4"
-absl-py = "^2.1.0"
-pydot = "^2.0.0"
-seaborn = "^0.13.2"
+numpy = "^1.26.4"
 pandas = "^2.2.2"
+click = "^8.1.7"
+matplotlib = "^3.8.4"
+scikit-learn = "^1.4.2"
+seaborn = "^0.13.2"
+tensorflow = "^2.16.1"
+iso-639 = "^0.4.5"
 opensmile = "^2.5.0"
 
+
+[tool.poetry.group.dev.dependencies]
+jupyter = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]

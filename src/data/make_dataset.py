@@ -43,6 +43,8 @@ def extract_audio_features_from_wav(filename, split, smile):
 
     collapsed_series = result_df.T.apply(lambda x: x.tolist(), axis=1)
     collapsed_df = collapsed_series.to_frame().T
+
+    collapsed_df['split'] = split
     
     return collapsed_df
     
@@ -100,7 +102,7 @@ def main():
     logger.info('creating final dataset')
 
     concatenated_df = pd.concat([df, audio_features_df], axis=1)
-    save_path = processed_data_dir / 'processed_dataset.csv'
+    save_path = processed_data_dir / 'processed_data.csv'
     concatenated_df.to_csv(save_path, index=False)  
 
     logger.info(f'done creating final dataset. saved to: {save_path}')
