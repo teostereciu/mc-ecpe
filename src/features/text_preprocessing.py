@@ -1,5 +1,7 @@
 import numpy as np
 from transformers import AutoTokenizer, DataCollatorWithPadding, TFBertModel
+import tensorflow as tf
+
 
 def get_text_features(df):
     train_df = df[df['split'] == 'train']
@@ -12,28 +14,6 @@ def get_text_features(df):
     
     return train_text, val_text, test_text
     #return np.array(train_text),np.array(val_text), np.array(test_text)
-
- 
-def prep_text(model, ds, data_collator, shuffle=False):
-    tf_set = model.prepare_tf_dataset(
-        ds,
-        shuffle=shuffle,
-        batch_size=16,
-        collate_fn=data_collator,
-    )
-    return tf_set
-
-def prep_split_text(model, ds):
-    tokenizer = AutoTokenizer.from_pretrained("distilbert/distilbert-base-uncased")
-    def preprocess_function(ds):
-        return tokenizer(ds['text'], truncation=True)
-    ds = ds.map(preprocess_function, batched=True)
-    data_collator = DataCollatorWithPadding(tokenizer=tokenizer, return_tensors="tf")
-    tf_train_set = prep_text(model, ds['train'], data_collator, shuffle=True)
-    tf_val_set = prep_text(model, ds['val'], data_collator)
-    tf_test_set = prep_text(model, ds['test'], data_collator)
-
-    return tf_train_set, tf_val_set, tf_test_set
 
 
 def bert_encode_text(X_train, X_val, X_test):

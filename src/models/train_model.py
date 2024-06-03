@@ -62,24 +62,33 @@ def get_data(fname, model_type):
 
         return X_train_audio, X_val_audio, X_test_audio, y_train
 
-    def get_text():
+    def get_text(y_train, from_file=True, oversample=True):
         logger.info('Text')
-        X_train_text, X_val_text, X_test_text = get_text_features(df)
-        bert_train, bert_val, bert_test = bert_encode_text(X_train_text, X_val_text[0:100], X_test_text[0:10])
-        print(bert_train, bert_val, bert_test)
-        return bert_train, bert_val, bert_test
+        if from_file:
+            bert_train = np.load('/Users/teodorastereciu/Documents/bachelors-project/mc-ecpe/data/processed/bert_large_train.npy')
+            bert_val = np.load('/Users/teodorastereciu/Documents/bachelors-project/mc-ecpe/data/processed/bert_large_val.npy')
+            bert_test = np.load('/Users/teodorastereciu/Documents/bachelors-project/mc-ecpe/data/processed/bert_large_test.npy')
+        else:
+            X_train_text, X_val_text, X_test_text = get_text_features(df)
+            bert_train, bert_val, bert_test = bert_encode_text(X_train_text, X_val_text, X_test_text)
+            
+        if oversample:
+            logger.info('Oversampling')
+            bert_train, y_train = do_oversample(bert_train, y_train, 'RANDOM')
+        
+        return bert_train, bert_val, bert_test, y_train
     
-    '''def get_both():
-        audio_train, audio_val, audio_test = get_audio(y_train, oversample=False)
-        bert_train, bert_val, bert_test = get_text()
-        return [audio_train, bert_train], [audio_val, bert_val], [audio_test, bert_test]
-    '''
+    def get_both():
+        audio_train, audio_val, audio_test, _ = get_audio(y_train, oversample=False)
+        bert_train, bert_val, bert_test, _ = get_text(y_train, oversample=False)
+        return [bert_train, audio_train], [bert_val, audio_val], [bert_test, audio_test]
+    
     if model_type == "AUDIO-ONLY":
         X_train, X_val, X_test, y_train = get_audio(y_train)
     elif model_type == "TEXT-ONLY":
-        X_train, X_val, X_test = get_text()
-    #else:
-        #X_train, X_val, X_test = get_both()
+        X_train, X_val, X_test, y_train = get_text(y_train)
+    else:
+        X_train, X_val, X_test = get_both()
 
 
     y_train_onehot = encode_labels(y_train)
@@ -101,6 +110,8 @@ def main(model_type):
     model = build_model(model_type)
     logger.info('Done building model')
 
+    print(model.summary())
+
     logger.info('Getting data')
     fname = processed_data_dir / 'processed_func_data.csv'
     X_train, y_train, X_val, y_val, X_test, y_test = get_data(fname, model_type)
@@ -110,7 +121,7 @@ def main(model_type):
     logger.info('Training model')
     #print(X_train.shape)
     #print(y_train.shape)
-    history = model.fit(X_train, y_train, validation_data=(X_val, y_val[0:100]), epochs=30, batch_size=64)
+    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=300, batch_size=32)
     logger.info('Done training')
 
     plot_history(history, 'loss')

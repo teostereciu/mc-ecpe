@@ -31,10 +31,13 @@ def get_audio_features(df):
 
     return X_train_audio, X_val_audio, X_test_audio
 
-def do_oversample(X, labels):
+def do_oversample(X, labels, type='SMOTE'):
     strategy = {'disgust':500, 'fear':500}
-    ros = SMOTE(sampling_strategy=strategy)
-    X, labels = ros.fit_resample(X, labels)
+    if type=='SMOTE':
+        os = SMOTE(sampling_strategy=strategy)
+    else:
+        os = RandomOverSampler(sampling_strategy=strategy)
+    X, labels = os.fit_resample(X, labels)
     return X, labels
 
 def do_scale(X, scaler=None):
